@@ -1,0 +1,1 @@
+/usr/bin/clang++ -std=c++17 -Wall -g /Users/tutan/Desktop/opengl/main.cpp -o /Users/tutan/Desktop/opengl/app -framework OpenGL -framework GLUT -Wno-deprecated

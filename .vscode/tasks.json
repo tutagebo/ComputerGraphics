@@ -1,0 +1,34 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "cppbuild",
+      "label": "Build GLUT app",
+      "command": "/usr/bin/clang++",
+      "args": [
+        "-std=c++17",
+        "-Wall",
+        "-g",
+        "${file}",
+        "-o",
+        "${fileDirname}/app",
+        "-framework",
+        "OpenGL",
+        "-framework",
+        "GLUT",
+        "-Wno-deprecated"
+      ],
+      "options": {
+        "cwd": "${fileDirname}"
+      },
+      "problemMatcher": [
+        "$gcc"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "detail": "Build current file with GLUT on macOS"
+    }
+  ]
+}
