@@ -151,6 +151,25 @@ void drawEllipsoid(Vec3 p,
     glPopMatrix();
 }
 
+void drawEllipsoidBetween(Vec3 a, Vec3 b,
+                          double sx, double sy,
+                          double r, double g, double bl, double alpha)
+{
+    Vec3 d = sub(b, a);
+    double h = len(d);
+    if (h < 1.0e-7) return;
+
+    Vec3 mid = mul(add(a, b), 0.5);
+    setMaterial(r, g, bl, alpha, 34.0);
+
+    glPushMatrix();
+    glTranslated(mid.x, mid.y, mid.z);
+    rotateZAxisTo(d);
+    glScaled(sx, sy, h * 0.5);
+    glutSolidSphere(1.0, 32, 16);
+    glPopMatrix();
+}
+
 void drawBezierLine(Vec3 p0, Vec3 p1, Vec3 p2, Vec3 p3,
                     double r, double g, double b, double width)
 {
@@ -370,18 +389,18 @@ void drawPentagonHead()
     setMaterial(0.52, 0.76, 0.31, 1.0, 32.0);
 
     Vec3 front[5] = {
-        V(-2.02,  0.28, 0.75),
-        V(-2.02, -0.28, 0.75),
-        V(-2.19, -0.20, 0.54),
-        V(-2.30,  0.00, 0.43),
-        V(-2.19,  0.20, 0.54)
+        V(-1.99,  0.34, 0.75),
+        V(-1.99, -0.34, 0.75),
+        V(-2.15, -0.25, 0.56),
+        V(-2.27,  0.00, 0.44),
+        V(-2.15,  0.25, 0.56)
     };
     Vec3 back[5] = {
-        V(-1.82,  0.22, 0.69),
-        V(-1.82, -0.22, 0.69),
-        V(-1.98, -0.16, 0.52),
-        V(-2.06,  0.00, 0.44),
-        V(-1.98,  0.16, 0.52)
+        V(-1.79,  0.27, 0.69),
+        V(-1.79, -0.27, 0.69),
+        V(-1.96, -0.18, 0.53),
+        V(-2.04,  0.00, 0.45),
+        V(-1.96,  0.18, 0.53)
     };
 
     glBegin(GL_POLYGON);
@@ -409,10 +428,23 @@ void drawPentagonHead()
     }
     glEnd();
 
-    drawEllipsoid(V(-2.22, 0.0, 0.455), 0.09, 0.08, 0.055, 0.94, 0.74, 0.36, 1.0);
+    drawEllipsoid(V(-2.21, 0.0, 0.455), 0.082, 0.075, 0.050, 0.92, 0.72, 0.34, 1.0);
+    drawEllipsoid(V(-2.12, 0.12, 0.56), 0.048, 0.036, 0.034, 0.70, 0.88, 0.42, 1.0);
+    drawEllipsoid(V(-2.12, -0.12, 0.56), 0.048, 0.036, 0.034, 0.70, 0.88, 0.42, 1.0);
+    drawEllipsoid(V(-2.17, 0.11, 0.485), 0.050, 0.025, 0.026, 0.86, 0.78, 0.58, 1.0);
+    drawEllipsoid(V(-2.17, -0.11, 0.485), 0.050, 0.025, 0.026, 0.86, 0.78, 0.58, 1.0);
 
-    drawLine(V(-2.17, 0.19, 0.55), V(-2.31, 0.04, 0.41), 0.04, 0.03, 0.02, 2.0);
-    drawLine(V(-2.17, -0.19, 0.55), V(-2.31, -0.04, 0.41), 0.04, 0.03, 0.02, 2.0);
+    drawLine(V(-2.02, 0.0, 0.74), V(-2.20, 0.0, 0.51), 0.24, 0.46, 0.12, 1.5);
+    drawLine(V(-2.04, 0.11, 0.71), V(-2.18, 0.05, 0.55), 0.32, 0.55, 0.16, 1.1);
+    drawLine(V(-2.04, -0.11, 0.71), V(-2.18, -0.05, 0.55), 0.32, 0.55, 0.16, 1.1);
+    drawBezierLine(V(-2.10, 0.24, 0.58), V(-2.16, 0.12, 0.50),
+                   V(-2.22, 0.04, 0.47), V(-2.27, 0.00, 0.44),
+                   0.92, 0.84, 0.62, 2.0);
+    drawBezierLine(V(-2.10, -0.24, 0.58), V(-2.16, -0.12, 0.50),
+                   V(-2.22, -0.04, 0.47), V(-2.27, 0.00, 0.44),
+                   0.92, 0.84, 0.62, 2.0);
+    drawLine(V(-2.16, 0.22, 0.55), V(-2.30, 0.04, 0.41), 0.05, 0.03, 0.02, 1.7);
+    drawLine(V(-2.16, -0.22, 0.55), V(-2.30, -0.04, 0.41), 0.05, 0.03, 0.02, 1.7);
 }
 
 void drawThoraxAndHead()
@@ -428,15 +460,17 @@ void drawThoraxAndHead()
 
     drawPentagonHead();
 
-    drawEllipsoid(V(-2.03, 0.30, 0.69), 0.17, 0.11, 0.15, 0.72, 0.90, 0.38, 1.0);
-    drawEllipsoid(V(-2.03, -0.30, 0.69), 0.17, 0.11, 0.15, 0.72, 0.90, 0.38, 1.0);
-    drawEllipsoid(V(-2.14, 0.31, 0.68), 0.035, 0.024, 0.034, 0.08, 0.10, 0.04, 1.0);
-    drawEllipsoid(V(-2.14, -0.31, 0.68), 0.035, 0.024, 0.034, 0.08, 0.10, 0.04, 1.0);
+    drawEllipsoid(V(-2.00, 0.34, 0.69), 0.19, 0.13, 0.165, 0.70, 0.90, 0.38, 1.0);
+    drawEllipsoid(V(-2.00, -0.34, 0.69), 0.19, 0.13, 0.165, 0.70, 0.90, 0.38, 1.0);
+    drawEllipsoid(V(-2.12, 0.35, 0.66), 0.034, 0.016, 0.022, 0.10, 0.08, 0.05, 1.0);
+    drawEllipsoid(V(-2.12, -0.35, 0.66), 0.034, 0.016, 0.022, 0.10, 0.08, 0.05, 1.0);
+    drawEllipsoid(V(-2.07, 0.39, 0.75), 0.026, 0.016, 0.026, 0.96, 0.98, 0.86, 1.0);
+    drawEllipsoid(V(-2.07, -0.39, 0.75), 0.026, 0.016, 0.026, 0.96, 0.98, 0.86, 1.0);
 
-    drawBezierLine(V(-2.14, 0.08, 0.80), V(-2.55, 0.42, 1.28),
+    drawBezierLine(V(-2.02, 0.10, 0.82), V(-2.46, 0.42, 1.28),
                    V(-3.05, 0.80, 1.58), V(-3.58, 1.10, 1.44),
                    0.30, 0.18, 0.07, 1.7);
-    drawBezierLine(V(-2.14, -0.08, 0.80), V(-2.55, -0.42, 1.28),
+    drawBezierLine(V(-2.02, -0.10, 0.82), V(-2.46, -0.42, 1.28),
                    V(-3.05, -0.80, 1.58), V(-3.58, -1.10, 1.44),
                    0.30, 0.18, 0.07, 1.7);
 
@@ -451,32 +485,61 @@ void drawSpines(Vec3 a, Vec3 b, int side, int count, double size)
     for (int i = 1; i <= count; i++) {
         double t = (double)i / (double)(count + 1);
         Vec3 base = lerp(a, b, t);
-        Vec3 tip = add(base, V(-0.05, -0.10 * s, -size));
-        drawConeBetween(base, tip, size * 0.16, 0.78, 0.82, 0.43);
+        double longTooth = (i % 3 == 0) ? 1.35 : 1.0;
+        Vec3 tip = add(base, V(-0.035, -0.13 * s * longTooth, -size * longTooth));
+
+        drawConeBetween(base, tip, size * 0.13, 0.05, 0.06, 0.03);
     }
 }
 
 void drawForeLeg(int side)
 {
     double s = (double)side;
-    Vec3 shoulder = V(-1.27, 0.16 * s, 0.32);
-    Vec3 upper = V(-1.72, 0.48 * s, -0.08);
-    Vec3 femurEnd = V(-2.48, 0.68 * s, -0.74);
-    Vec3 tibiaEnd = V(-2.34, 0.28 * s, -1.24);
-    Vec3 claw = V(-2.54, 0.12 * s, -1.55);
+    Vec3 shoulder = V(-1.28, 0.13 * s, 0.36);
+    Vec3 elbow = V(-1.54, 0.50 * s, 0.18);
+    Vec3 wrist = V(-1.72, 0.72 * s, -0.30);
+    Vec3 femurBase = V(-1.95, 0.78 * s, -0.48);
+    Vec3 femurTip = V(-2.72, 0.60 * s, -0.95);
+    Vec3 tibiaBase = add(femurTip, V(-0.03, -0.04 * s, -0.04));
+    Vec3 tibiaMid = V(-2.86, 0.40 * s, -1.14);
+    Vec3 tibiaTip = V(-2.84, 0.22 * s, -1.34);
+    Vec3 claw = V(-3.02, 0.12 * s, -1.50);
 
-    drawCylinderBetween(shoulder, upper, 0.055, 0.075, 0.48, 0.70, 0.22);
-    drawCylinderBetween(upper, femurEnd, 0.15, 0.09, 0.57, 0.78, 0.30);
-    drawCylinderBetween(femurEnd, tibiaEnd, 0.070, 0.032, 0.52, 0.74, 0.25);
-    drawConeBetween(tibiaEnd, claw, 0.024, 0.33, 0.16, 0.05);
+    drawCylinderBetween(shoulder, elbow, 0.050, 0.060, 0.46, 0.68, 0.21);
+    drawCylinderBetween(elbow, wrist, 0.060, 0.052, 0.58, 0.76, 0.30);
+    drawCylinderBetween(wrist, femurBase, 0.060, 0.085, 0.45, 0.66, 0.20);
 
-    drawJoint(shoulder, 0.065);
-    drawJoint(upper, 0.075);
-    drawJoint(femurEnd, 0.068);
-    drawJoint(tibiaEnd, 0.045);
+    drawEllipsoidBetween(femurBase, femurTip, 0.16, 0.065, 0.58, 0.80, 0.30, 1.0);
+    drawCylinderBetween(femurBase, femurTip, 0.050, 0.040, 0.40, 0.62, 0.18);
 
-    drawSpines(upper, femurEnd, side, 8, 0.12);
-    drawSpines(femurEnd, tibiaEnd, side, 5, 0.09);
+    Vec3 stripeA = add(femurBase, V(-0.02, -0.045 * s, 0.035));
+    Vec3 stripeB = add(femurTip, V(-0.02, -0.045 * s, 0.035));
+    drawCylinderBetween(stripeA, stripeB, 0.018, 0.013, 0.86, 0.84, 0.30);
+
+    drawCylinderBetween(femurTip, tibiaBase, 0.060, 0.052, 0.50, 0.70, 0.23);
+    drawCylinderBetween(tibiaBase, tibiaMid, 0.052, 0.034, 0.56, 0.76, 0.25);
+    drawCylinderBetween(tibiaMid, tibiaTip, 0.034, 0.020, 0.78, 0.70, 0.36);
+    drawConeBetween(tibiaTip, claw, 0.025, 0.33, 0.14, 0.04);
+
+    drawJoint(shoulder, 0.058);
+    drawJoint(elbow, 0.060);
+    drawJoint(wrist, 0.058);
+    drawJoint(femurBase, 0.072);
+    drawJoint(femurTip, 0.058);
+    drawJoint(tibiaBase, 0.046);
+    drawJoint(tibiaMid, 0.040);
+
+    drawSpines(add(femurBase, V(-0.02, -0.075 * s, -0.02)),
+               add(femurTip, V(-0.02, -0.075 * s, -0.02)),
+               side, 11, 0.095);
+    drawSpines(tibiaBase, tibiaTip, side, 6, 0.065);
+
+    for (int i = 1; i <= 5; i++) {
+        double t = (double)i / 6.0;
+        Vec3 base = lerp(femurBase, femurTip, t);
+        drawEllipsoid(add(base, V(0.01, 0.050 * s, 0.05)),
+                      0.020, 0.010, 0.020, 0.92, 0.88, 0.46, 1.0);
+    }
 }
 
 void drawWalkingLeg(int side, int rear)
